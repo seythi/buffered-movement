@@ -1,0 +1,16 @@
+{
+  "name": "buffered-movement",
+  "title": "Buffered Movement - a rollover movement module ",
+  "description": "This module allows you to buffer up to N moves with your arrow keys",
+  "author": "Seythi",
+  "version": "0.0.1",
+  "minimumCoreVersion": "0.7.9",
+  "scripts": [
+  	"./scripts/main.js"
+  ],
+  "dependencies": [
+  	{
+  		"name": "lib-wrapper"
+  	}
+  ]
+}
