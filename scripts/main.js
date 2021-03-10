@@ -2,7 +2,7 @@
 var movebuffer = [];
 var moving = false;
 Hooks.once("init", () => {
-	libWrapper.register('buffered-movement', 'KeyboardManager.prototype._onMovement', function ( ...args) { //overide _handleMovement
+	libWrapper.register('buffered-movement', 'KeyboardManager.prototype._onMovement', function (event, up, modifiers) { //overide _handleMovement
     	if ( !canvas.ready || up || modifiers.hasFocus ) return;
         event.preventDefault();
         // Handle CTRL+A

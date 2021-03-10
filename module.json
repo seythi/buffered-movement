@@ -10,7 +10,7 @@
       "discord": "seythi#8675"
     }
   ],
-  "version": "0.0.2",
+  "version": "0.0.3",
   "minimumCoreVersion": "0.7.9",
   "compatibleCoreVersion": "0.7.9",
   "scripts": [
