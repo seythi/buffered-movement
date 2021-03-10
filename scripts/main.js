@@ -1,30 +1,52 @@
 "use strict"
 var movebuffer = [];
-
+var moving = false;
 Hooks.once("init", () => {
-	libWrapper.register('buffered-movement', 'game.dnd5e.entities.KeyboardManager.prototype._handleMovement', function ( ...args) { //overide _handleMovement
-    	if ( !this._moveKeys.size ) return;
-        // Get controlled objects
-        let objects = layer.placeables.filter(o => o._controlled);
-        if ( objects.length === 0 ) return;
-        // Define movement offsets and get moved directions
-        const directions = this._moveKeys;
-        let dx = 0;
-        let dy = 0;
-        // Assign movement offsets
-        if ( directions.has("left") ) dx -= 1;
-        if ( directions.has("up") ) dy -= 1;
-        if ( directions.has("right") ) dx += 1;
-        if ( directions.has("down") ) dy += 1;
-        this._moveKeys.clear();
-        //^ this is all the same as usual
-        movebuffer.push({dx, dy}); //push the movement direction to the queue
+	libWrapper.register('buffered-movement', 'game.foundry.KeyboardManager.prototype._onMovement', function ( ...args) { //overide _handleMovement
+    	if ( !canvas.ready || up || modifiers.hasFocus ) return;
+        event.preventDefault();
+        // Handle CTRL+A
+        if ( (modifiers.key === "a") && modifiers.isCtrl ) return this._onKeyA(event, up, modifiers);
+        // Reset move keys after a delay of 50ms or greater
+        const now = Date.now();
+        const delta = now - this._moveTime;
+        if ( delta > 10 ) this._moveKeys.clear();
+        // Track the movement set
+        const directions = this.moveKeys[modifiers.key];
+        for ( let d of directions ) {
+          this._moveKeys.add(d);
+        }
+        // Handle canvas pan using CTRL
+        if ( modifiers.isCtrl ) {
+          if ( ["w", "a", "s", "d"].includes(modifiers.key) ) return;
+          return this._handleCanvasPan();
+        }
+        movebuffer.push([event])
+        setTimeout(10)
+        this._moveTime = now;
+        if(!moving)
+        {
+            moving = true;
+            moveloop();
+        }
     	return ; 
 	});
 
-    setInterval
+    () => {
+        
+    }
 });
 Hooks.once('ready', () => {
     if(!game.modules.get('lib-wrapper')?.active && game.user.isGM)
         ui.notifications.error("Module XYZ requires the 'libWrapper' module. Please install and activate it.");
 });
+async function moveloop() {
+    while (movebuffer.length != 0)
+    {
+        const layer = canvas.activeLayer;
+        if ( layer instanceof TokenLayer || layer instanceof TilesLayer ) {
+            setTimeout(() => this._handleMovement(movebuffer.shift(), layer), 50);
+        }
+    }
+    
+}
