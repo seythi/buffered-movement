@@ -23,5 +23,5 @@
   ],
   "url": "https://github.com/seythi/buffered-movement",
   "download": "https://github.com/seythi/buffered-movement/archive/main.zip",
-  "manifest": "https://github.com/seythi/buffered-movement/blob/main/module.json"
+  "manifest": "https://raw.githubusercontent.com/seythi/buffered-movement/main/module.json"
 }
